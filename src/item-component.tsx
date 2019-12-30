@@ -1,11 +1,13 @@
-import React, { FC, useCallback, useState } from 'react'
-import { StackItem } from 'src/use-stacks'
-import { useStacks } from 'src/use-stacks'
+import React, { FC, useCallback, useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { StackItem, useStacks } from 'src/use-stacks'
+import { setFocus } from 'src/store/stacks'
 import styled from 'styled-components'
 
 type Props = {
     data: StackItem
-    index: number
+    index: number,
+    stackKey: string
 }
 
 const Form = styled.form`
@@ -13,24 +15,41 @@ const Form = styled.form`
     flex-direction: column;
 `
 
-export const ItemComponent: FC<Props> = ({ data: { content }, index }) => {
-    const [currentContent, setCurrentContent, stacks, key] = useState(content)
+export const ItemComponent: FC<Props> = ({ data: { content }, index, stackKey: ownStackKey }) => {
+    const textareaRef = useRef(null)
+    const dispatch = useDispatch()
+    const [currentContent, setCurrentContent] = useState(content)
 
-    const { modifyStackItem } = useStacks()
+    const { modifyStackItem, stack, stackKey, shouldFocus } = useStacks()
 
     const handleContentChange = useCallback((e) => {
         e.preventDefault()
         setCurrentContent(e.target.value)
-    }, [])
+        handleSubmit(e)
+    }, [currentContent, modifyStackItem])
     const handleSubmit = useCallback((e) => {
         e.preventDefault()
         modifyStackItem(index, { content: currentContent })
     }, [currentContent, modifyStackItem])
 
+    useEffect(() => {
+        if (
+            ownStackKey === stackKey &&
+            index === stack.length - 1 &&
+            shouldFocus
+        ) {
+            textareaRef.current.focus()
+            dispatch(setFocus(false))
+        }
+    }, [stack, index, ownStackKey, stackKey, shouldFocus])
+
     return (
         <Form onSubmit={handleSubmit}>
-            <textarea value={currentContent} onChange={handleContentChange} />
-            <button>submit</button>
+            <textarea
+                ref={textareaRef}
+                value={currentContent}
+                onChange={handleContentChange}
+            />
         </Form>
     )
 }

@@ -27,7 +27,7 @@ export const StackArrayComponent: FC<Props> = () => {
         <div>
             {
                 stacksOrder.map((item, key) => (
-                    <StackComponent key={key} stack={stacks[item]} />
+                    <StackComponent key={key} stack={stacks[item]} stackKey={item} />
                 ))
             }
         </div>

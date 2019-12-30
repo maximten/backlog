@@ -17,12 +17,14 @@ const INITIAL_STATE = {
     stacks: DEFAULT_STACKS,
     key: DEFAULT_STACK_KEY,
     order: DEFAULT_STACKS_ORDER,
+    shouldFocus: true,
 }
 
 const ACTIONS = {
     SET_STACKS: "SET_STACKS",
     SET_KEY: "SET_KEY",
     SET_ORDER: "SET_ORDER",
+    SET_FOCUS: "SET_FOCUS",
 }
 
 export const setStacks = (stacks) => ({
@@ -38,6 +40,11 @@ export const setKey = (key) => ({
 export const setOrder = (order) => ({
     type: ACTIONS.SET_ORDER,
     payload: order
+})
+
+export const setFocus = (focus) => ({
+    type: ACTIONS.SET_FOCUS,
+    payload: focus
 })
 
 export const stacks = (state = INITIAL_STATE, { type, payload }) => {
@@ -58,6 +65,12 @@ export const stacks = (state = INITIAL_STATE, { type, payload }) => {
             return {
                 ...state,
                 order: payload
+            }
+        }
+        case ACTIONS.SET_FOCUS: {
+            return {
+                ...state,
+                shouldFocus: payload
             }
         }
         default:
