@@ -1,8 +1,9 @@
+import { useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setStacks, setKey, setOrder } from 'src/store/stacks'
+import { setStacks } from 'src/store/stacks'
+import { entriesOf } from 'src/types'
 
 export type StackItem = {
-    title: string;
     content: string;
 }
 
@@ -25,15 +26,15 @@ export const useStacks = () => {
     });
     const dispatch = useDispatch()
 
-    const getStack = () => {
+    const getStack = useCallback(() => {
         return [...stacks[key]]
-    }
+    }, [stacks])
 
-    const setStack = (stack: Stack) => {
+    const setStack = useCallback((stack: Stack) => {
         const newStacks = { ...stacks }
         newStacks[key] = stack
         dispatch(setStacks(newStacks))
-    }
+    }, [stacks])
 
     const pushStackItem = (item: StackItem) => {
         const newStack = getStack()
@@ -41,11 +42,11 @@ export const useStacks = () => {
         setStack(newStack)
     }
 
-    const modifyStackItem = (index: number, item: StackItem) => {
+    const modifyStackItem = useCallback((index: number, item: StackItem) => {
         const newStack = getStack()
         newStack[index] = item
         setStack(newStack)
-    }
+    }, [getStack])
 
     const removeStackItem = (index: number) => {
         const newStack = getStack()

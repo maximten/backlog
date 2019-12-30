@@ -13,28 +13,22 @@ const Form = styled.form`
     flex-direction: column;
 `
 
-export const ItemComponent: FC<Props> = ({ data: { title, content }, index }) => {
-    const [currentTitle, setCurrentTitle] = useState(title)
-    const [currentContent, setCurrentContent] = useState(content)
+export const ItemComponent: FC<Props> = ({ data: { content }, index }) => {
+    const [currentContent, setCurrentContent, stacks, key] = useState(content)
 
     const { modifyStackItem } = useStacks()
 
-    const handleTitleChange = useCallback((e) => {
-        e.preventDefault()
-        setCurrentTitle(e.target.value)
-    }, [])
     const handleContentChange = useCallback((e) => {
         e.preventDefault()
         setCurrentContent(e.target.value)
     }, [])
     const handleSubmit = useCallback((e) => {
-        modifyStackItem(index, { title: currentTitle, content: currentContent })
         e.preventDefault()
-    }, [currentTitle, currentContent])
+        modifyStackItem(index, { content: currentContent })
+    }, [currentContent, modifyStackItem])
 
     return (
         <Form onSubmit={handleSubmit}>
-            <input value={currentTitle} onChange={handleTitleChange} />
             <textarea value={currentContent} onChange={handleContentChange} />
             <button>submit</button>
         </Form>

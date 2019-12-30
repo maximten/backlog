@@ -8,16 +8,14 @@ type Props = {}
 export const StackArrayComponent: FC<Props> = () => {
     const { stacksOrder, stacks, pushStackItem, popStackItem } = useStacks()
     useKeyboard({
-        [KeyCodes.N]: {
-            isCtrlPresed: false,
+        [KeyCodes.SPACE]: {
             isShiftPressed: true,
             callback: useCallback((e) => {
                 e.preventDefault()
                 pushStackItem(createEmptyItem())
             }, [pushStackItem])
         },
-        [KeyCodes.D]: {
-            isCtrlPresed: false,
+        [KeyCodes.BACKSPACE]: {
             isShiftPressed: true,
             callback: useCallback((e) => {
                 e.preventDefault()
