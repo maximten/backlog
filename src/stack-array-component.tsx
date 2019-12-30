@@ -1,0 +1,37 @@
+import React, { FC, useCallback } from 'react'
+import { useStacks, createEmptyItem } from 'src/use-stacks'
+import { useKeyboard, KeyCodes } from 'src/use-keyboard'
+import { StackComponent } from 'src/stack-component'
+
+type Props = {}
+
+export const StackArrayComponent: FC<Props> = () => {
+    const { stacksOrder, stacks, pushStackItem, popStackItem } = useStacks()
+    useKeyboard({
+        [KeyCodes.N]: {
+            isCtrlPresed: false,
+            isShiftPressed: true,
+            callback: useCallback((e) => {
+                e.preventDefault()
+                pushStackItem(createEmptyItem())
+            }, [pushStackItem])
+        },
+        [KeyCodes.D]: {
+            isCtrlPresed: false,
+            isShiftPressed: true,
+            callback: useCallback((e) => {
+                e.preventDefault()
+                popStackItem()
+            }, [popStackItem])
+        },
+    })
+    return (
+        <div>
+            {
+                stacksOrder.map((item, key) => (
+                    <StackComponent key={key} stack={stacks[item]} />
+                ))
+            }
+        </div>
+    )
+}

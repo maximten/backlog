@@ -1,43 +1,41 @@
-import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { setStacks, setKey, setOrder } from 'src/store/stacks'
 
 export type StackItem = {
     title: string;
-    data: string;
+    content: string;
 }
 
 export type Stack = StackItem[]
 
 export type Stacks = Record<string, Stack>
 
-const DEFAULT_STACK_KEY = 'default';
+export const createEmptyItem = () => ({
+    title: '',
+    content: ''
+})
 
-const DEFAULT_INIT_VALUE = {
-    [DEFAULT_STACK_KEY]: []
-}
-
-const DEFAULT_STACKS_ORDER = [
-    DEFAULT_STACK_KEY
-]
-
-export const useStacks = (
-    initStacks: Stacks = DEFAULT_INIT_VALUE,
-    initStackKey = DEFAULT_STACK_KEY,
-    initStackOrder = DEFAULT_STACKS_ORDER
-) => {
-    const [stacks, setStacks] = useState(initStacks)
-    const [stackKey, setStackKey] = useState(initStackKey)
-    const [stackOrder, setStackOrder] = useState(initStackOrder)
+export const useStacks = () => {
+    const {
+        stacks,
+        key,
+        order
+    } = useSelector((state) => {
+        return state.stacks
+    });
+    const dispatch = useDispatch()
 
     const getStack = () => {
-        return [...stacks[stackKey]]
-    }
-    const setStack = (stack: Stack) => {
-        const newStacks = { ...stacks }
-        newStacks[stackKey] = stack
-        setStacks(newStacks)
+        return [...stacks[key]]
     }
 
-    const addStackItem = (item: StackItem) => {
+    const setStack = (stack: Stack) => {
+        const newStacks = { ...stacks }
+        newStacks[key] = stack
+        dispatch(setStacks(newStacks))
+    }
+
+    const pushStackItem = (item: StackItem) => {
         const newStack = getStack()
         newStack.push(item)
         setStack(newStack)
@@ -55,6 +53,11 @@ export const useStacks = (
         setStack(newStack)
     }
 
+    const popStackItem = () => {
+        const stack = getStack();
+        removeStackItem(stack.length - 1)
+    }
+
     const swapStackItems = (indexA: number, indexB: number) => {
         const newStack = getStack()
         const itemA = { ...newStack[indexA] }
@@ -65,9 +68,13 @@ export const useStacks = (
     }
 
     return {
-        addStackItem,
+        pushStackItem,
         modifyStackItem,
         removeStackItem,
-        swapStackItems
+        popStackItem,
+        swapStackItems,
+        stacks,
+        stackKey: key,
+        stacksOrder: order
     }
 }

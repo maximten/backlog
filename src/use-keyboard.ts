@@ -6,15 +6,17 @@ export enum KeyCodes {
     UP = 38,
     RIGHT = 39,
     DOWN = 40,
+    N = 78,
+    D = 68,
 }
 
 const CTRL_CODE = 1000;
 const SHIFT_CODE = 10000;
 
-type Bindings = Record<KeyCodes, {
+type Bindings = Record<number, {
     isCtrlPresed: boolean,
     isShiftPressed: boolean,
-    callback: (e: KeyboardEvent) => Promise<void>
+    callback: (e: KeyboardEvent) => void
 }>
 
 export const useKeyboard = (bindings: Bindings) => useEffect(() => {
@@ -22,7 +24,7 @@ export const useKeyboard = (bindings: Bindings) => useEffect(() => {
         return
     }
     const getEventHash = (keyCode: number, isCtrlPresed: boolean, isShiftPressed: boolean) =>
-        keyCode + Number(isCtrlPresed) * CTRL_CODE + Number(isShiftPressed) * SHIFT_CODE
+        Number(keyCode) + Number(isCtrlPresed) * CTRL_CODE + Number(isShiftPressed) * SHIFT_CODE
     const callbackMap = entriesOf(bindings)
         .reduce((carry, [keyCode, { isCtrlPresed, isShiftPressed, callback }]) => {
             const hash = getEventHash(keyCode, isCtrlPresed, isShiftPressed);
@@ -34,9 +36,10 @@ export const useKeyboard = (bindings: Bindings) => useEffect(() => {
         if (hash in callbackMap) {
             callbackMap[hash](e)
         }
+        console.log('e.keyCode', e.keyCode)
     }
     window.addEventListener('keydown', keydownCallback)
     return () => {
         window.removeEventListener('keydown', keydownCallback)
     }
-}, [])
+}, [bindings])

@@ -1,12 +1,10 @@
 import React, { FC } from 'react'
-import { KeyCodes, useKeyboard } from 'src/use-keyboard'
+import { AppComponent } from 'src/app-component'
 
 const IndexPage: FC = () => {
     return (
-        <div>
-            <h1>Backlog</h1>
-        </div>
+        <AppComponent />
     )
 }
 
-export default IndexPage;
+export default IndexPage
