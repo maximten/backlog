@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setStacks, setFocus } from 'src/store/stacks';
+import { setStacks, setFocus, postState } from 'src/store/stacks';
+import { useThrottledDispatch } from 'src/use-throttled-dispatch';
 
 export type StackItem = {
-    content: string;
+  content: string;
 }
 
 export type Stack = StackItem[]
@@ -36,12 +37,15 @@ export const useStacks = () => {
   });
   const dispatch = useDispatch();
 
+  const throttledPostState = useThrottledDispatch(postState, 500);
+
   const getStack = useCallback(() => [...stacks[key]], [stack]);
 
   const setStack = useCallback((stack: Stack) => {
     const newStacks = { ...stacks };
     newStacks[key] = stack;
     dispatch(setStacks(newStacks));
+    throttledPostState();
   }, [stacks]);
 
   const pushStackItem = (item: StackItem) => {

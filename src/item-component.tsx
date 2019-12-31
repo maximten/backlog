@@ -28,7 +28,7 @@ export const ItemComponent: FC<Props> = ({ data: { content }, index, stackKey: o
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    modifyStackItem(index, { content: currentContent });
+    modifyStackItem(index, { content: e.target.value });
   }, [currentContent, modifyStackItem]);
 
   const handleContentChange = useCallback((e) => {

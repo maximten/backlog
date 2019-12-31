@@ -47,6 +47,47 @@ export const setFocus = (focus) => ({
   payload: focus,
 });
 
+const parseState = (data) => {
+  const {
+    stacks = DEFAULT_STACKS,
+    key = DEFAULT_STACK_KEY,
+    order = DEFAULT_STACKS_ORDER,
+  } = data;
+  return {
+    stacks, key, order,
+  };
+};
+
+export const fetchState = () => async (dispatch) => {
+  const data = await fetch('api/stacks').then((res) => res.json());
+  const { stacks, key, order } = parseState(data);
+  dispatch(setStacks(stacks));
+  dispatch(setKey(key));
+  dispatch(setOrder(order));
+  dispatch(setFocus(true));
+};
+
+export const postState = () => async (dispatch, getState) => {
+  const {
+    stacks: {
+      stacks,
+      key,
+      order,
+    },
+  } = getState();
+  await fetch('api/stacks', {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      stacks,
+      key,
+      order,
+    }),
+  });
+};
+
 export const stacks = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
     case ACTIONS.SET_STACKS: {

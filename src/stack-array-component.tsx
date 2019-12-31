@@ -1,7 +1,9 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { useStacks, createEmptyItem } from 'src/use-stacks';
 import { useKeyboard, KeyCodes } from 'src/use-keyboard';
 import { StackComponent } from 'src/stack-component';
+import { useDispatch } from 'react-redux';
+import { fetchState } from 'src/store/stacks';
 
 type Props = {}
 
@@ -25,6 +27,10 @@ export const StackArrayComponent: FC<Props> = () => {
       }, [popStackItem]),
     },
   });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchState());
+  }, []);
   return (
     <div>
       {
