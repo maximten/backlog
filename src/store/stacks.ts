@@ -32,6 +32,7 @@ const ACTIONS = {
   SET_FOCUSED_STACK: 'SET_FOCUSED_STACK',
   SET_FOCUSED_ITEM: 'SET_FOCUSED_ITEM',
   SET_STACK_INDEX: 'SET_STACK_INDEX',
+  SET_STACK_INDEXES: 'SET_STACK_INDEXES',
 };
 
 export const setStacks = (stacks) => ({
@@ -64,13 +65,18 @@ export const setFocusedItem = (index) => ({
   payload: index,
 });
 
-export const setStackIndexes = ({
+export const setStackIndex = ({
   key, index,
 }) => ({
   type: ACTIONS.SET_STACK_INDEX,
   payload: {
     key, index,
   },
+});
+
+export const setStackIndexes = (indexes) => ({
+  type: ACTIONS.SET_STACK_INDEXES,
+  payload: indexes,
 });
 
 const parseState = (data) => {
@@ -92,6 +98,7 @@ export const fetchState = () => async (dispatch) => {
   const {
     stacks, key, order, focusedStack, focusedItem, stacksIndexes,
   } = parseState(data);
+  console.log('stacksIndexes', stacksIndexes);
   dispatch(setStacks(stacks));
   dispatch(setKey(key));
   dispatch(setOrder(order));
@@ -173,6 +180,12 @@ export const stacks = (state = INITIAL_STATE, {
           ...state.stacksIndexes,
           [payload.key]: payload.index,
         },
+      };
+    }
+    case ACTIONS.SET_STACK_INDEXES: {
+      return {
+        ...state,
+        stacksIndexes: payload,
       };
     }
     default:

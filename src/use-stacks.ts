@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setStacks, postState, setFocusedItem, setFocusedStack, setStackIndexes } from 'src/store/stacks';
+import { setStacks, postState, setFocusedItem, setFocusedStack, setStackIndex } from 'src/store/stacks';
 import { useThrottledDispatch } from 'src/use-throttled-dispatch';
 
 export type StackItem = {
@@ -71,7 +71,7 @@ export const useStacks = () => {
     });
     setStack(newStack);
     dispatch(setFocusedItem(newStack.length - 1));
-    dispatch(setStackIndexes({
+    dispatch(setStackIndex({
       key, index: newStackIndex,
     }));
   };
