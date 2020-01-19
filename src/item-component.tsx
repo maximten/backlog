@@ -37,18 +37,17 @@ export const ItemComponent: FC<Props> = ({
       ...data,
       content: e.target.value,
     });
-  }, [currentContent, modifyStackItem]);
+  }, [modifyStackItem, index, data]);
 
   const handleContentChange = useCallback((e) => {
     e.preventDefault();
-    setCurrentContent(e.target.value);
     handleSubmit(e);
-  }, [currentContent, modifyStackItem]);
+  }, [handleSubmit]);
 
   const handleFocus = useCallback((e) => {
     e.preventDefault();
     setFocus(ownStackKey, index);
-  }, [index]);
+  }, [index, ownStackKey, setFocus]);
 
   useEffect(() => {
     if (
@@ -58,6 +57,10 @@ export const ItemComponent: FC<Props> = ({
       textareaRef.current.focus();
     }
   }, [index, ownStackKey, focusedStack, focusedItem]);
+
+  useEffect(() => {
+    setCurrentContent(content);
+  }, [content]);
 
   return (
     <Form onSubmit={handleSubmit}>

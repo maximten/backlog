@@ -40,13 +40,13 @@ export const StackArrayComponent: FC<Props> = () => {
         e.preventDefault();
         swapStackItemsUp();
       },
-      [popStackItem]),
+      [swapStackItemsUp]),
     },
   });
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchState());
-  }, []);
+  }, [dispatch]);
   return (
     <div>
       {stacksOrder.map((item) => (

@@ -52,15 +52,15 @@ export const useStacks = () => {
 
   const throttledPostState = useThrottledDispatch(postState, 500);
 
-  const getStack = useCallback(() => [...stacks[key]], [stack]);
-  const getNewStackIndex = useCallback(() => stacksIndexes[key] + 1, [stacksIndexes]);
+  const getStack = useCallback(() => [...stacks[key]], [key, stacks]);
+  const getNewStackIndex = useCallback(() => stacksIndexes[key] + 1, [key, stacksIndexes]);
 
   const setStack = useCallback((stack: Stack) => {
     const newStacks = { ...stacks };
     newStacks[key] = stack;
     dispatch(setStacks(newStacks));
     throttledPostState();
-  }, [stacks]);
+  }, [dispatch, key, stacks, throttledPostState]);
 
   const pushStackItem = (item: StackItem) => {
     const newStack = getStack();
@@ -80,7 +80,7 @@ export const useStacks = () => {
     const newStack = getStack();
     newStack[index] = item;
     setStack(newStack);
-  }, [getStack, stacks]);
+  }, [getStack, setStack]);
 
   const removeStackItem = (index: number) => {
     const newStack = getStack();
@@ -117,7 +117,7 @@ export const useStacks = () => {
     dispatch(setFocusedStack(stack));
     dispatch(setFocusedItem(item));
     throttledPostState();
-  }, [stacks]);
+  }, [dispatch, throttledPostState]);
 
   return {
     pushStackItem,
