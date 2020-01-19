@@ -18,6 +18,8 @@ const INITIAL_STATE = {
   key: DEFAULT_STACK_KEY,
   order: DEFAULT_STACKS_ORDER,
   shouldFocus: true,
+  focusedStack: DEFAULT_STACK_KEY,
+  focusedItem: null,
 };
 
 const ACTIONS = {
@@ -25,6 +27,8 @@ const ACTIONS = {
   SET_KEY: 'SET_KEY',
   SET_ORDER: 'SET_ORDER',
   SET_FOCUS: 'SET_FOCUS',
+  SET_FOCUSED_STACK: 'SET_FOCUSED_STACK',
+  SET_FOCUSED_ITEM: 'SET_FOCUSED_ITEM',
 };
 
 export const setStacks = (stacks) => ({
@@ -47,24 +51,40 @@ export const setFocus = (focus) => ({
   payload: focus,
 });
 
+export const setFocusedStack = (key) => ({
+  type: ACTIONS.SET_FOCUSED_STACK,
+  payload: key,
+});
+
+export const setFocusedItem = (index) => ({
+  type: ACTIONS.SET_FOCUSED_ITEM,
+  payload: index,
+});
+
 const parseState = (data) => {
   const {
     stacks = DEFAULT_STACKS,
     key = DEFAULT_STACK_KEY,
     order = DEFAULT_STACKS_ORDER,
+    focusedStack = DEFAULT_STACK_KEY,
+    focusedItem = null,
   } = data;
   return {
-    stacks, key, order,
+    stacks, key, order, focusedStack, focusedItem,
   };
 };
 
 export const fetchState = () => async (dispatch) => {
   const data = await fetch('api/stacks').then((res) => res.json());
-  const { stacks, key, order } = parseState(data);
+  const {
+    stacks, key, order, focusedStack, focusedItem,
+  } = parseState(data);
   dispatch(setStacks(stacks));
   dispatch(setKey(key));
   dispatch(setOrder(order));
   dispatch(setFocus(true));
+  dispatch(setFocusedStack(focusedStack));
+  dispatch(setFocusedItem(focusedItem));
 };
 
 export const postState = () => async (dispatch, getState) => {
@@ -73,6 +93,8 @@ export const postState = () => async (dispatch, getState) => {
       stacks,
       key,
       order,
+      focusedStack,
+      focusedItem,
     },
   } = getState();
   await fetch('api/stacks', {
@@ -84,6 +106,8 @@ export const postState = () => async (dispatch, getState) => {
       stacks,
       key,
       order,
+      focusedStack,
+      focusedItem,
     }),
   });
 };
@@ -112,6 +136,18 @@ export const stacks = (state = INITIAL_STATE, { type, payload }) => {
       return {
         ...state,
         shouldFocus: payload,
+      };
+    }
+    case ACTIONS.SET_FOCUSED_STACK: {
+      return {
+        ...state,
+        focusedStack: payload,
+      };
+    }
+    case ACTIONS.SET_FOCUSED_ITEM: {
+      return {
+        ...state,
+        focusedItem: payload,
       };
     }
     default:

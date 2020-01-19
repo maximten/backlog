@@ -9,7 +9,7 @@ type Props = {}
 
 export const StackArrayComponent: FC<Props> = () => {
   const {
-    stacksOrder, stacks, pushStackItem, popStackItem,
+    stacksOrder, stacks, pushStackItem, popStackItem, focusedStack, focusedItem, swapStackItemsUp,
   } = useStacks();
   useKeyboard({
     [KeyCodes.SPACE]: {
@@ -26,6 +26,13 @@ export const StackArrayComponent: FC<Props> = () => {
         popStackItem();
       }, [popStackItem]),
     },
+    [KeyCodes.UP]: {
+      isShiftPressed: true,
+      callback: useCallback((e) => {
+        e.preventDefault();
+        swapStackItemsUp();
+      }, [popStackItem]),
+    },
   });
   const dispatch = useDispatch();
   useEffect(() => {
@@ -35,7 +42,7 @@ export const StackArrayComponent: FC<Props> = () => {
     <div>
       {
         stacksOrder.map((item) => (
-          <StackComponent key={item} stack={stacks[item]} stackKey={item} />
+          <StackComponent key={item} stack={stacks[item]} stackKey={item} focusedStack={focusedStack} focusedItem={focusedItem} />
         ))
       }
     </div>

@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setStacks, setFocus, postState } from 'src/store/stacks';
+import {
+  setStacks, postState, setFocusedItem, setFocusedStack,
+} from 'src/store/stacks';
 import { useThrottledDispatch } from 'src/use-throttled-dispatch';
 
 export type StackItem = {
@@ -23,9 +25,11 @@ export const useStacks = () => {
     order,
     stack,
     shouldFocus,
+    focusedStack,
+    focusedItem,
   } = useSelector((state) => {
     const {
-      stacks, key, order, shouldFocus,
+      stacks, key, order, shouldFocus, focusedStack, focusedItem,
     } = state.stacks;
     return {
       stacks,
@@ -33,6 +37,8 @@ export const useStacks = () => {
       order,
       shouldFocus,
       stack: stacks[key],
+      focusedStack,
+      focusedItem,
     };
   });
   const dispatch = useDispatch();
@@ -52,7 +58,7 @@ export const useStacks = () => {
     const newStack = getStack();
     newStack.push(item);
     setStack(newStack);
-    dispatch(setFocus(true));
+    dispatch(setFocusedItem(newStack.length - 1));
   };
 
   const modifyStackItem = useCallback((index: number, item: StackItem) => {
@@ -65,7 +71,8 @@ export const useStacks = () => {
     const newStack = getStack();
     newStack.splice(index);
     setStack(newStack);
-    dispatch(setFocus(true));
+    const focusedItem = newStack.length > 0 ? newStack.length - 1 : null;
+    dispatch(setFocusedItem(focusedItem));
   };
 
   const popStackItem = () => {
@@ -75,23 +82,41 @@ export const useStacks = () => {
 
   const swapStackItems = (indexA: number, indexB: number) => {
     const newStack = getStack();
-    const itemA = { ...newStack[indexA] };
-    const itemB = { ...newStack[indexB] };
+    const itemA = { ...stack[indexA] };
+    const itemB = { ...stack[indexB] };
     newStack[indexA] = itemB;
     newStack[indexB] = itemA;
     setStack(newStack);
   };
+
+  const swapStackItemsUp = () => {
+    const focusedStackInst = { ...stacks[focusedStack] };
+    if (focusedItem === null || !focusedStackInst || focusedItem < 1) {
+      return;
+    }
+    // TODO: pass focused stack
+    swapStackItems(focusedItem, focusedItem - 1);
+  };
+
+  const setFocus = useCallback((stack, item) => {
+    dispatch(setFocusedStack(stack));
+    dispatch(setFocusedItem(item));
+    throttledPostState();
+  }, [stacks]);
 
   return {
     pushStackItem,
     modifyStackItem,
     removeStackItem,
     popStackItem,
-    swapStackItems,
+    swapStackItemsUp,
     stacks,
     stack,
     stackKey: key,
     stacksOrder: order,
     shouldFocus,
+    focusedStack,
+    focusedItem,
+    setFocus,
   };
 };

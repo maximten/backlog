@@ -1,15 +1,15 @@
 import React, {
   FC, useCallback, useState, useEffect, useRef,
 } from 'react';
-import { useDispatch } from 'react-redux';
 import { StackItem, useStacks } from 'src/use-stacks';
-import { setFocus } from 'src/store/stacks';
 import styled from 'styled-components';
 
 type Props = {
   data: StackItem;
   index: number;
   stackKey: string;
+  focusedStack: string;
+  focusedItem: number | null;
 }
 
 const Form = styled.form`
@@ -17,13 +17,19 @@ const Form = styled.form`
     flex-direction: column;
 `;
 
-export const ItemComponent: FC<Props> = ({ data: { content }, index, stackKey: ownStackKey }) => {
+export const ItemComponent: FC<Props> = ({
+  data: { content },
+  index,
+  stackKey: ownStackKey,
+  focusedStack,
+  focusedItem,
+}) => {
   const textareaRef = useRef(null);
-  const dispatch = useDispatch();
   const [currentContent, setCurrentContent] = useState(content);
 
   const {
-    modifyStackItem, stack, stackKey, shouldFocus,
+    modifyStackItem,
+    setFocus,
   } = useStacks();
 
   const handleSubmit = useCallback((e) => {
@@ -37,16 +43,19 @@ export const ItemComponent: FC<Props> = ({ data: { content }, index, stackKey: o
     handleSubmit(e);
   }, [currentContent, modifyStackItem]);
 
+  const handleFocus = useCallback((e) => {
+    e.preventDefault();
+    setFocus(ownStackKey, index);
+  }, [index]);
+
   useEffect(() => {
     if (
-      ownStackKey === stackKey
-      && index === stack.length - 1
-      && shouldFocus
+      ownStackKey === focusedStack
+      && index === focusedItem
     ) {
       textareaRef.current.focus();
-      dispatch(setFocus(false));
     }
-  }, [stack, index, ownStackKey, stackKey, shouldFocus]);
+  }, [index, ownStackKey, focusedStack, focusedItem]);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -54,6 +63,7 @@ export const ItemComponent: FC<Props> = ({ data: { content }, index, stackKey: o
         ref={textareaRef}
         value={currentContent}
         onChange={handleContentChange}
+        onFocus={handleFocus}
       />
     </Form>
   );
