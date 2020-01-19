@@ -1,11 +1,14 @@
 const DEFAULT_STACK_KEY = 'default';
 
 const EMPTY_ITEM = {
+  id: 0,
   title: '',
   content: '',
 };
 
 const DEFAULT_STACKS = { [DEFAULT_STACK_KEY]: [EMPTY_ITEM] };
+
+const DEFAULT_STACKS_INDEXES = { [DEFAULT_STACK_KEY]: 0 };
 
 const DEFAULT_STACKS_ORDER = [
   DEFAULT_STACK_KEY,
@@ -18,6 +21,7 @@ const INITIAL_STATE = {
   shouldFocus: true,
   focusedStack: DEFAULT_STACK_KEY,
   focusedItem: null,
+  stacksIndexes: DEFAULT_STACKS_INDEXES,
 };
 
 const ACTIONS = {
@@ -27,6 +31,7 @@ const ACTIONS = {
   SET_FOCUS: 'SET_FOCUS',
   SET_FOCUSED_STACK: 'SET_FOCUSED_STACK',
   SET_FOCUSED_ITEM: 'SET_FOCUSED_ITEM',
+  SET_STACK_INDEX: 'SET_STACK_INDEX',
 };
 
 export const setStacks = (stacks) => ({
@@ -59,6 +64,15 @@ export const setFocusedItem = (index) => ({
   payload: index,
 });
 
+export const setStackIndexes = ({
+  key, index,
+}) => ({
+  type: ACTIONS.SET_STACK_INDEX,
+  payload: {
+    key, index,
+  },
+});
+
 const parseState = (data) => {
   const {
     stacks = DEFAULT_STACKS,
@@ -66,16 +80,17 @@ const parseState = (data) => {
     order = DEFAULT_STACKS_ORDER,
     focusedStack = DEFAULT_STACK_KEY,
     focusedItem = null,
+    stacksIndexes = DEFAULT_STACKS_INDEXES,
   } = data;
   return {
-    stacks, key, order, focusedStack, focusedItem,
+    stacks, key, order, focusedStack, focusedItem, stacksIndexes,
   };
 };
 
 export const fetchState = () => async (dispatch) => {
   const data = await fetch('api/stacks').then((res) => res.json());
   const {
-    stacks, key, order, focusedStack, focusedItem,
+    stacks, key, order, focusedStack, focusedItem, stacksIndexes,
   } = parseState(data);
   dispatch(setStacks(stacks));
   dispatch(setKey(key));
@@ -83,6 +98,7 @@ export const fetchState = () => async (dispatch) => {
   dispatch(setFocus(true));
   dispatch(setFocusedStack(focusedStack));
   dispatch(setFocusedItem(focusedItem));
+  dispatch(setStackIndexes(stacksIndexes));
 };
 
 export const postState = () => async (dispatch, getState) => {
@@ -93,6 +109,7 @@ export const postState = () => async (dispatch, getState) => {
       order,
       focusedStack,
       focusedItem,
+      stacksIndexes,
     },
   } = getState();
   await fetch('api/stacks', {
@@ -104,6 +121,7 @@ export const postState = () => async (dispatch, getState) => {
       order,
       focusedStack,
       focusedItem,
+      stacksIndexes,
     }),
   });
 };
@@ -146,6 +164,15 @@ export const stacks = (state = INITIAL_STATE, {
       return {
         ...state,
         focusedItem: payload,
+      };
+    }
+    case ACTIONS.SET_STACK_INDEX: {
+      return {
+        ...state,
+        stacksIndexes: {
+          ...state.stacksIndexes,
+          [payload.key]: payload.index,
+        },
       };
     }
     default:

@@ -18,8 +18,7 @@ export const StackComponent: FC<Props> = ({
   <>
     {stack.map((item, key) => (
       <ItemComponent
-        // TODO: add better key
-        key={item.content}
+        key={item.id}
         data={item}
         index={key}
         stackKey={stackKey}

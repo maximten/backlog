@@ -16,12 +16,13 @@ const Form = styled.form`
 `;
 
 export const ItemComponent: FC<Props> = ({
-  data: { content },
+  data,
   index,
   stackKey: ownStackKey,
   focusedStack,
   focusedItem,
 }) => {
+  const { content } = data;
   const textareaRef = useRef(null);
   const [currentContent, setCurrentContent] = useState(content);
 
@@ -32,7 +33,10 @@ export const ItemComponent: FC<Props> = ({
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    modifyStackItem(index, { content: e.target.value });
+    modifyStackItem(index, {
+      ...data,
+      content: e.target.value,
+    });
   }, [currentContent, modifyStackItem]);
 
   const handleContentChange = useCallback((e) => {
