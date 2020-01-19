@@ -16,17 +16,20 @@ const CTRL_CODE = 1000;
 const SHIFT_CODE = 10000;
 const ALT_CODE = 100000;
 
-type Bindings = Record<number, {
+type Binding = {
   isCtrlPresed?: boolean;
   isShiftPressed?: boolean;
   isAltPresed?: boolean;
   callback: (e: KeyboardEvent) => void;
-}>
+}
+
+type Bindings = Record<number, Binding[]>
 
 export const useKeyboard = (bindings: Bindings) => useEffect(() => {
   if (!window) {
     return;
   }
+
   const getEventHash = (
     keyCode: number,
     isCtrlPresed: boolean,
@@ -36,22 +39,26 @@ export const useKeyboard = (bindings: Bindings) => useEffect(() => {
   + Number(isCtrlPresed || false) * CTRL_CODE
   + Number(isShiftPressed || false) * SHIFT_CODE
     + Number(isAltPresed || false) * ALT_CODE;
+
   const callbackMap = entriesOf(bindings)
-    .reduce((carry, [keyCode, {
-      isCtrlPresed,
-      isShiftPressed,
-      isAltPresed,
-      callback,
-    }]) => {
-      const hash = getEventHash(
-        keyCode,
+    .reduce((carry, [keyCode, bindings]) => {
+      bindings.forEach(({
         isCtrlPresed,
         isShiftPressed,
         isAltPresed,
-      );
-      carry[hash] = callback;
+        callback,
+      }) => {
+        const hash = getEventHash(
+          keyCode,
+          isCtrlPresed,
+          isShiftPressed,
+          isAltPresed,
+        );
+        carry[hash] = callback;
+      });
       return carry;
     }, {});
+
   const keydownCallback = (e: KeyboardEvent) => {
     const hash = getEventHash(
       e.keyCode, e.ctrlKey, e.shiftKey, e.altKey,
@@ -61,6 +68,7 @@ export const useKeyboard = (bindings: Bindings) => useEffect(() => {
     }
     console.log('e.keyCode', e.keyCode);
   };
+
   window.addEventListener('keydown', keydownCallback);
   return () => {
     window.removeEventListener('keydown', keydownCallback);

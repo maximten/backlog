@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useStacks, createEmptyItem } from 'src/use-stacks';
 import { useKeyboard, KeyCodes } from 'src/use-keyboard';
 import { StackComponent } from 'src/stack-component';
@@ -9,55 +9,76 @@ type Props = {};
 
 export const StackArrayComponent: FC<Props> = () => {
   const {
-    stacksOrder,
     stacks,
     pushStackItem,
     popStackItem,
     focusedStack,
     focusedItem,
     swapStackItemsUp,
+    addStack,
+    focusToLeftStack,
+    focusToRightStack,
   } = useStacks();
   useKeyboard({
-    [KeyCodes.SPACE]: {
+    [KeyCodes.SPACE]: [{
       isShiftPressed: true,
       callback: useCallback((e) => {
         e.preventDefault();
         pushStackItem(createEmptyItem());
       },
       [pushStackItem]),
-    },
-    [KeyCodes.BACKSPACE]: {
+    }, {
+      isCtrlPresed: true,
+      callback: useCallback((e) => {
+        e.preventDefault();
+        addStack();
+      },
+      [addStack]),
+    }],
+    [KeyCodes.BACKSPACE]: [{
       isShiftPressed: true,
       callback: useCallback((e) => {
         e.preventDefault();
         popStackItem();
       },
       [popStackItem]),
-    },
-    [KeyCodes.UP]: {
+    }],
+    [KeyCodes.UP]: [{
       isShiftPressed: true,
       callback: useCallback((e) => {
         e.preventDefault();
         swapStackItemsUp();
       },
       [swapStackItemsUp]),
-    },
+    }],
+    [KeyCodes.LEFT]: [{
+      isShiftPressed: true,
+      callback: useCallback((e) => {
+        e.preventDefault();
+        focusToLeftStack();
+      },
+      [focusToLeftStack]),
+    }],
+    [KeyCodes.RIGHT]: [{
+      isShiftPressed: true,
+      callback: useCallback((e) => {
+        e.preventDefault();
+        focusToRightStack();
+      },
+      [focusToRightStack]),
+    }],
   });
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchState());
   }, [dispatch]);
+  const stack = useMemo(() => stacks[focusedStack], [focusedStack, stacks]);
   return (
-    <div>
-      {stacksOrder.map((item) => (
-        <StackComponent
-          key={item}
-          stack={stacks[item]}
-          stackKey={item}
-          focusedStack={focusedStack}
-          focusedItem={focusedItem}
-        />
-      ))}
-    </div>
+    <StackComponent
+      stack={stack}
+      stackKey={focusedStack}
+      focusedStack={focusedStack}
+      focusedItem={focusedItem}
+    />
   );
 };

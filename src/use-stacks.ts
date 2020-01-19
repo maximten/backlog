@@ -1,6 +1,13 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setStacks, postState, setFocusedItem, setFocusedStack, setStackIndex } from 'src/store/stacks';
+import { setStacks,
+  postState,
+  setFocusedItem,
+  setFocusedStack,
+  setStackIndex,
+  setLastKey,
+  setOrder,
+  setStackIndexes } from 'src/store/stacks';
 import { useThrottledDispatch } from 'src/use-throttled-dispatch';
 
 export type StackItem = {
@@ -20,47 +27,26 @@ export const createEmptyItem = () => ({
 export const useStacks = () => {
   const {
     stacks,
-    key,
     order,
     stack,
-    shouldFocus,
     focusedStack,
     focusedItem,
     stacksIndexes,
-  } = useSelector((state) => {
-    const {
-      stacks,
-      key,
-      order,
-      shouldFocus,
-      focusedStack,
-      focusedItem,
-      stacksIndexes,
-    } = state.stacks;
-    return {
-      stacks,
-      key,
-      order,
-      shouldFocus,
-      stack: stacks[key],
-      focusedStack,
-      focusedItem,
-      stacksIndexes,
-    };
-  });
+    lastKey,
+  } = useSelector((state) => state.stacks);
   const dispatch = useDispatch();
 
   const throttledPostState = useThrottledDispatch(postState, 500);
 
-  const getStack = useCallback(() => [...stacks[key]], [key, stacks]);
-  const getNewStackIndex = useCallback(() => stacksIndexes[key] + 1, [key, stacksIndexes]);
+  const getStack = useCallback(() => [...stacks[focusedStack]], [focusedStack, stacks]);
+  const getNewStackIndex = useCallback(() => stacksIndexes[focusedStack] + 1, [focusedStack, stacksIndexes]);
 
   const setStack = useCallback((stack: Stack) => {
     const newStacks = { ...stacks };
-    newStacks[key] = stack;
+    newStacks[focusedStack] = stack;
     dispatch(setStacks(newStacks));
     throttledPostState();
-  }, [dispatch, key, stacks, throttledPostState]);
+  }, [dispatch, focusedStack, stacks, throttledPostState]);
 
   const pushStackItem = (item: StackItem) => {
     const newStack = getStack();
@@ -72,7 +58,7 @@ export const useStacks = () => {
     setStack(newStack);
     dispatch(setFocusedItem(newStack.length - 1));
     dispatch(setStackIndex({
-      key, index: newStackIndex,
+      key: focusedStack, index: newStackIndex,
     }));
   };
 
@@ -109,7 +95,6 @@ export const useStacks = () => {
     if (focusedItem === null || !focusedStackInst || focusedItem < 1) {
       return;
     }
-    // TODO: pass focused stack
     swapStackItems(focusedItem, focusedItem - 1);
   };
 
@@ -119,6 +104,38 @@ export const useStacks = () => {
     throttledPostState();
   }, [dispatch, throttledPostState]);
 
+  const addStack = useCallback(() => {
+    const newKey = focusedStack + 1;
+    const newIndex = 0;
+    const newStacks = {
+      ...stacks,
+      [newKey]: [{
+        id: newIndex,
+        ...createEmptyItem(),
+      }],
+    };
+    const newOrder = [...order, newKey];
+    const newStacksIndexes = {
+      ...stacksIndexes, [newKey]: newIndex,
+    };
+    dispatch(setStacks(newStacks));
+    dispatch(setLastKey(newKey));
+    dispatch(setOrder(newOrder));
+    dispatch(setFocusedStack(newKey));
+    dispatch(setFocusedItem(newIndex));
+    dispatch(setStackIndexes(newStacksIndexes));
+  }, [dispatch, focusedStack, order, stacks, stacksIndexes]);
+
+  const focusToLeftStack = useCallback(() => {
+    const newKey = focusedStack === 0 ? lastKey : focusedStack - 1;
+    dispatch(setFocusedStack(newKey));
+  }, [dispatch, focusedStack, lastKey]);
+
+  const focusToRightStack = useCallback(() => {
+    const newKey = focusedStack === lastKey ? 0 : focusedStack + 1;
+    dispatch(setFocusedStack(newKey));
+  }, [dispatch, focusedStack, lastKey]);
+
   return {
     pushStackItem,
     modifyStackItem,
@@ -127,11 +144,12 @@ export const useStacks = () => {
     swapStackItemsUp,
     stacks,
     stack,
-    stackKey: key,
     stacksOrder: order,
-    shouldFocus,
     focusedStack,
     focusedItem,
     setFocus,
+    addStack,
+    focusToLeftStack,
+    focusToRightStack,
   };
 };

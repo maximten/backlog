@@ -51,8 +51,7 @@ export const ItemComponent: FC<Props> = ({
 
   useEffect(() => {
     if (
-      ownStackKey === focusedStack
-      && index === focusedItem
+      index === focusedItem
     ) {
       textareaRef.current.focus();
     }
