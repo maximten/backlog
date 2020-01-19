@@ -1,6 +1,4 @@
-import React, {
-  FC, useCallback, useState, useEffect, useRef,
-} from 'react';
+import React, { FC, useCallback, useState, useEffect, useRef } from 'react';
 import { StackItem, useStacks } from 'src/use-stacks';
 import styled from 'styled-components';
 

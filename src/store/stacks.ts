@@ -5,9 +5,7 @@ const EMPTY_ITEM = {
   content: '',
 };
 
-const DEFAULT_STACKS = {
-  [DEFAULT_STACK_KEY]: [EMPTY_ITEM],
-};
+const DEFAULT_STACKS = { [DEFAULT_STACK_KEY]: [EMPTY_ITEM] };
 
 const DEFAULT_STACKS_ORDER = [
   DEFAULT_STACK_KEY,
@@ -99,9 +97,7 @@ export const postState = () => async (dispatch, getState) => {
   } = getState();
   await fetch('api/stacks', {
     method: 'POST',
-    headers: {
-      'Content-type': 'application/json',
-    },
+    headers: { 'Content-type': 'application/json' },
     body: JSON.stringify({
       stacks,
       key,
@@ -112,7 +108,9 @@ export const postState = () => async (dispatch, getState) => {
   });
 };
 
-export const stacks = (state = INITIAL_STATE, { type, payload }) => {
+export const stacks = (state = INITIAL_STATE, {
+  type, payload,
+}) => {
   switch (type) {
     case ACTIONS.SET_STACKS: {
       return {

@@ -34,6 +34,17 @@ module.exports = {
     "import/extensions": 0,
     "react/no-array-index-key": 0,
     "no-param-reassign": 0,
-    "consistent-return": 0
+    "consistent-return": 0,
+    "react/jsx-indent": [1, 2],
+    "function-paren-newline": ["error", { "minItems": 4 }],
+    "object-curly-newline": [
+        "error",
+        {
+            "ObjectExpression": { "multiline": true, "minProperties": 2 },
+            "ObjectPattern": { "multiline": true, "minProperties": 2 },
+            "ImportDeclaration": "never",
+            "ExportDeclaration": { "multiline": true, "minProperties": 3 }
+        }
+    ]
   },
 };

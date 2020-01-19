@@ -1,19 +1,24 @@
 {
-    "eslint.options": {
-        "configFile": "./.eslintrc.js"
+  "eslint.options": {
+    "configFile": "./.eslintrc.js"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "typescript",
+      "autoFix": true
     },
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        {
-            "language": "typescript",
-            "autoFix": true
-        }, {
-            "language": "typescriptreact",
-            "autoFix": true
-        }
-    ],
-    "editor.tabSize": 2,
-    "editor.formatOnSave": true,
-    "eslint.autoFixOnSave": true
+    {
+      "language": "typescriptreact",
+      "autoFix": true
+    }
+  ],
+  "editor.tabSize": 2,
+  "editor.formatOnSave": false,
+  "eslint.autoFixOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

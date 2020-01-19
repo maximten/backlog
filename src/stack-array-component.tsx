@@ -5,11 +5,17 @@ import { StackComponent } from 'src/stack-component';
 import { useDispatch } from 'react-redux';
 import { fetchState } from 'src/store/stacks';
 
-type Props = {}
+type Props = {};
 
 export const StackArrayComponent: FC<Props> = () => {
   const {
-    stacksOrder, stacks, pushStackItem, popStackItem, focusedStack, focusedItem, swapStackItemsUp,
+    stacksOrder,
+    stacks,
+    pushStackItem,
+    popStackItem,
+    focusedStack,
+    focusedItem,
+    swapStackItemsUp,
   } = useStacks();
   useKeyboard({
     [KeyCodes.SPACE]: {
@@ -17,21 +23,24 @@ export const StackArrayComponent: FC<Props> = () => {
       callback: useCallback((e) => {
         e.preventDefault();
         pushStackItem(createEmptyItem());
-      }, [pushStackItem]),
+      },
+      [pushStackItem]),
     },
     [KeyCodes.BACKSPACE]: {
       isShiftPressed: true,
       callback: useCallback((e) => {
         e.preventDefault();
         popStackItem();
-      }, [popStackItem]),
+      },
+      [popStackItem]),
     },
     [KeyCodes.UP]: {
       isShiftPressed: true,
       callback: useCallback((e) => {
         e.preventDefault();
         swapStackItemsUp();
-      }, [popStackItem]),
+      },
+      [popStackItem]),
     },
   });
   const dispatch = useDispatch();
@@ -40,11 +49,15 @@ export const StackArrayComponent: FC<Props> = () => {
   }, []);
   return (
     <div>
-      {
-        stacksOrder.map((item) => (
-          <StackComponent key={item} stack={stacks[item]} stackKey={item} focusedStack={focusedStack} focusedItem={focusedItem} />
-        ))
-      }
+      {stacksOrder.map((item) => (
+        <StackComponent
+          key={item}
+          stack={stacks[item]}
+          stackKey={item}
+          focusedStack={focusedStack}
+          focusedItem={focusedItem}
+        />
+      ))}
     </div>
   );
 };

@@ -53,7 +53,9 @@ export const useKeyboard = (bindings: Bindings) => useEffect(() => {
       return carry;
     }, {});
   const keydownCallback = (e: KeyboardEvent) => {
-    const hash = getEventHash(e.keyCode, e.ctrlKey, e.shiftKey, e.altKey);
+    const hash = getEventHash(
+      e.keyCode, e.ctrlKey, e.shiftKey, e.altKey,
+    );
     if (hash in callbackMap) {
       callbackMap[hash](e);
     }
