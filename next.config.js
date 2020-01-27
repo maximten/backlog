@@ -1,8 +1,9 @@
 const path = require('path');
+const withCSS = require('@zeit/next-css');
 
-module.exports = {
-    webpack: (config) => {
-        config.resolve.modules.push(path.resolve(__dirname))
-        return config
-    }
-}
+module.exports = withCSS({
+  webpack: (config) => {
+    config.resolve.modules.push(path.resolve(__dirname));
+    return config;
+  },
+});

@@ -11,8 +11,14 @@ type Props = {
 }
 
 const Form = styled.form`
+    position: relative;
     display: flex;
     flex-direction: column;
+`;
+
+const Textarea = styled.textarea`
+  max-width: 100%;
+  min-width: 100%;
 `;
 
 export const ItemComponent: FC<Props> = ({
@@ -63,7 +69,7 @@ export const ItemComponent: FC<Props> = ({
 
   return (
     <Form onSubmit={handleSubmit}>
-      <textarea
+      <Textarea
         ref={textareaRef}
         value={currentContent}
         onChange={handleContentChange}
