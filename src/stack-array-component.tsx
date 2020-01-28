@@ -18,6 +18,7 @@ export const StackArrayComponent: FC<Props> = () => {
     addStack,
     focusToLeftStack,
     focusToRightStack,
+    stacksNames,
   } = useStacks();
   useKeyboard({
     [KeyCodes.SPACE]: [{
@@ -75,6 +76,7 @@ export const StackArrayComponent: FC<Props> = () => {
   const stack = useMemo(() => stacks[focusedStack], [focusedStack, stacks]);
   return (
     <StackComponent
+      name={stacksNames[focusedStack]}
       stack={stack}
       stackKey={focusedStack}
       focusedStack={focusedStack}

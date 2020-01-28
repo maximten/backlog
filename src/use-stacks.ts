@@ -7,7 +7,8 @@ import { setStacks,
   setStackIndex,
   setLastKey,
   setOrder,
-  setStackIndexes } from 'src/store/stacks';
+  setStackIndexes,
+  setStackNames } from 'src/store/stacks';
 import { useThrottledDispatch } from 'src/use-throttled-dispatch';
 
 export type StackItem = {
@@ -32,6 +33,7 @@ export const useStacks = () => {
     focusedStack,
     focusedItem,
     stacksIndexes,
+    stacksNames,
     lastKey,
   } = useSelector((state) => state.stacks);
   const dispatch = useDispatch();
@@ -136,6 +138,13 @@ export const useStacks = () => {
     dispatch(setFocusedStack(newKey));
   }, [dispatch, focusedStack, lastKey]);
 
+  const setStackName = useCallback((name) => {
+    const newStacksNames = { ...stacksNames };
+    newStacksNames[focusedStack] = name;
+    dispatch(setStackNames(newStacksNames));
+    throttledPostState();
+  }, [dispatch, focusedStack, stacksNames, throttledPostState]);
+
   return {
     pushStackItem,
     modifyStackItem,
@@ -144,6 +153,7 @@ export const useStacks = () => {
     swapStackItemsUp,
     stacks,
     stack,
+    stacksNames,
     stacksOrder: order,
     focusedStack,
     focusedItem,
@@ -151,5 +161,6 @@ export const useStacks = () => {
     addStack,
     focusToLeftStack,
     focusToRightStack,
+    setStackName,
   };
 };
