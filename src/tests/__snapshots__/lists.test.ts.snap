@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`lists should be in store 1`] = `
+exports[`store lists should be in store 1`] = `
 Object {
   "focusedList": "list_1580504400005",
   "listsMap": Object {

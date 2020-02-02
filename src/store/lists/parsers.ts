@@ -26,7 +26,7 @@ export const parseItem = (rawItem: any) => ({ data: rawItem?.data || '' });
 export const parseList = (rawList: any): List => {
   const rawItems = rawList?.items || {};
   let items;
-  if (!isNonEmptyRecord(rawList?.rawItems)) {
+  if (!isNonEmptyRecord(rawItems)) {
     const itemKey = generateItemKey();
     items = { [itemKey]: createItem() };
   } else {
