@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lists should be in store 1`] = `
+Object {
+  "focusedList": "list_1580504400005",
+  "listsMap": Object {
+    "list_1580504400005": Object {
+      "focusedItem": "item_1580504400006",
+      "itemSelection": 0,
+      "items": Object {
+        "item_1580504400006": Object {
+          "data": "",
+        },
+      },
+      "itemsOrder": Array [
+        "item_1580504400006",
+      ],
+      "name": "",
+    },
+  },
+  "listsOrder": Array [
+    "list_1580504400005",
+  ],
+}
+`;
