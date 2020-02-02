@@ -2,12 +2,12 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    "jest/globals": true
   },
   extends: [
     'plugin:react/recommended',
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@eslint-plugin-jest",
     'airbnb',
   ],
   globals: {
@@ -26,6 +26,7 @@ module.exports = {
     'react',
     'react-hooks',
     '@typescript-eslint',
+    'jest',
   ],
   rules: {
     "import/prefer-default-export": 0,
