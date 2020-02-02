@@ -1,10 +1,8 @@
-import React, { FC } from 'react'
-import { AppComponent } from 'src/app-component'
+import React, { FC } from 'react';
+import { App } from 'src/components/app';
 
-const IndexPage: FC = () => {
-    return (
-        <AppComponent />
-    )
-}
+const IndexPage: FC = () => (
+  <App />
+);
 
-export default IndexPage
+export default IndexPage;

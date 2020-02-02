@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-export const ShortcutsComponent: FC = () => (
+export const Shortcuts: FC = () => (
   <div>
     <h2>Shortcuts</h2>
     <p>
@@ -14,6 +14,9 @@ export const ShortcutsComponent: FC = () => (
     </p>
     <p>
       Shift + UP = Swap items up
+    </p>
+    <p>
+      Shift + DOWN = Swap items up
     </p>
     <p>
       Shift + LEFT = Go to left stack

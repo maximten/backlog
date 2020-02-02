@@ -2,24 +2,24 @@
 
 exports[`store lists should be in store 1`] = `
 Object {
-  "focusedList": "list_1580504400005",
+  "focusedList": "list_1580504400001",
   "listsMap": Object {
-    "list_1580504400005": Object {
-      "focusedItem": "item_1580504400006",
+    "list_1580504400001": Object {
+      "focusedItem": "item_1580504400002",
       "itemSelection": 0,
       "items": Object {
-        "item_1580504400006": Object {
+        "item_1580504400002": Object {
           "data": "",
         },
       },
       "itemsOrder": Array [
-        "item_1580504400006",
+        "item_1580504400002",
       ],
       "name": "",
     },
   },
   "listsOrder": Array [
-    "list_1580504400005",
+    "list_1580504400001",
   ],
 }
 `;
