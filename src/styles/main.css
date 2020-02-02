@@ -8,3 +8,8 @@ body {
   background-color: 	#1F1626;
   color: 	#FFFFFF;
 }
+
+.app {
+  opacity: 0;
+  transition: ease all 0.5s;
+}
